@@ -18,11 +18,12 @@ public class PlayerMovement : MonoBehaviour {
 
 		horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 
-        animator.SetFloat("LowSpeed", Mathf.Abs(horizontalMove));
+        animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
 		if (Input.GetButtonDown("Jump"))
 		{
 			jump = true;
+            animator.SetBool("Jumping", true);
 		}
 
 		if (Input.GetButtonDown("Crouch"))
@@ -34,6 +35,11 @@ public class PlayerMovement : MonoBehaviour {
 		}
 
 	}
+
+    public void OnLanding()
+    {
+        animator.SetBool("Jumping", false);
+    }
 
 	void FixedUpdate ()
 	{
