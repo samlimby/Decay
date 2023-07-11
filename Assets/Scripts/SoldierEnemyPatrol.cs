@@ -55,4 +55,3 @@ public class SoldierEnemyPatrol : MonoBehaviour
             enemy.position.y, enemy.position.z);
     }
 }
-
