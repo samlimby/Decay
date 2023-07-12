@@ -3,26 +3,35 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     public int maxHealth = 100;
-    private int currentHealth;
+    public int currentHealth;
 
+    public Animator animator;
+
+    //starting health when the game begins
     void Start()
     {
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int amount)
     {
-        currentHealth -= damage;
+        currentHealth -= amount;
 
-        if (currentHealth <= 0)
+        if(currentHealth <= 0)
         {
+            //death occurs
             Die();
+            //play death animation
+            animator.SetBool("Dead", true);
+            //show gameoverscreen
         }
     }
 
     void Die()
     {
-        // Death logic here. This might include disabling the sprite, playing a death animation, etc.
-        Debug.Log(transform.name + " died.");
+        Debug.Log("Enemy Died!");
+        //Die animation
+        //Disable the enemy
     }
+
 }
