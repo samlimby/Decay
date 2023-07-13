@@ -39,7 +39,7 @@ public class PlayerMovement : MonoBehaviour {
 
     public void OnLanding()
     {
-        animator.SetBool("Jumping", false);
+        animator.SetBool("Jump", false);
     }
 
 	void FixedUpdate ()

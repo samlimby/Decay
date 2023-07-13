@@ -4060,6 +4060,7 @@ GameObject:
   - component: {fileID: 226510222}
   - component: {fileID: 226510229}
   - component: {fileID: 226510230}
+  - component: {fileID: 226510231}
   m_Layer: 7
   m_Name: Soldier Enemy
   m_TagString: Untagged
@@ -4276,7 +4277,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
-  animator: {fileID: 0}
+  animator: {fileID: 226510229}
+  OnHit:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDie:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &226510231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226510221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 813a446eba2f148139f02424e3fbfd7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &334002236
 GameObject:
   m_ObjectHideFlags: 0
@@ -4937,7 +4956,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
-  animator: {fileID: 0}
+  animator: {fileID: 1628729305}
+  OnHit:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDie:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1628729307
 MonoBehaviour:
   m_ObjectHideFlags: 0

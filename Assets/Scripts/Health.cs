@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Health : MonoBehaviour
 {
@@ -7,7 +8,10 @@ public class Health : MonoBehaviour
 
     public Animator animator;
 
-    //starting health when the game begins
+    // Define the events
+    public UnityEvent OnHit;
+    public UnityEvent OnDie;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -17,21 +21,25 @@ public class Health : MonoBehaviour
     {
         currentHealth -= amount;
 
+        animator.SetTrigger("Hit");
+
+        // Invoke the OnHit event
+        OnHit?.Invoke();
+
         if(currentHealth <= 0)
         {
-            //death occurs
             Die();
-            //play death animation
             animator.SetBool("Dead", true);
-            //show gameoverscreen
         }
     }
 
     void Die()
     {
         Debug.Log("Enemy Died!");
-        //Die animation
-        //Disable the enemy
-    }
 
+        // Invoke the OnDie event
+        OnDie?.Invoke();
+
+        animator.SetBool("Dead", true);
+    }
 }
