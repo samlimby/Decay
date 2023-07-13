@@ -12,6 +12,14 @@ public class PlayerMovement : MonoBehaviour {
 	float horizontalMove = 0f;
 	bool jump = false;
 	bool crouch = false;
+
+    void Awake() {
+        if (controller != null)
+        {
+            // Add OnLanding to the OnLandEvent UnityEvent
+            controller.OnLandEvent.AddListener(OnLanding);
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -26,7 +34,6 @@ public class PlayerMovement : MonoBehaviour {
             animator.SetBool("Jump", true);
 		}
 
-
 		if (Input.GetButtonDown("Crouch"))
 		{
 			crouch = true;
@@ -34,7 +41,6 @@ public class PlayerMovement : MonoBehaviour {
 		{
 			crouch = false;
 		}
-
 	}
 
     public void OnLanding()
