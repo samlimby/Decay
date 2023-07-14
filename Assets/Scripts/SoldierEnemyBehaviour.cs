@@ -2,17 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class EnemyAttack
+{
+    public string animationTrigger;
+    public float cooldown;
+    public int attackDamage;
+    [HideInInspector]
+    public float nextAttackTime = 0f;
+}
+
 public class SoldierEnemyBehaviour : MonoBehaviour
 {
-    [SerializeField] private float attackCooldown;
-    [SerializeField] private int damage;
-    [SerializeField] private BoxCollider2D boxCollider;
-    [SerializeField] private LayerMask playerLayer;
+    public Animator animator;
+
+    public BoxCollider2D boxCollider;
+    public LayerMask playerLayer;
 
     private Health health;
-    private Animator animator;
-
-    private float lastAttackTime;
+    
+    public List<EnemyAttack> attacks;
 
     private void Awake()
     {
@@ -26,26 +35,32 @@ public class SoldierEnemyBehaviour : MonoBehaviour
 
     private void Update()
     {
-        // Check if enough time has passed since the last attack
-        if (Time.time - lastAttackTime >= attackCooldown)
+        foreach (var attack in attacks)
         {
-            Attack();
+            if (Time.time >= attack.nextAttackTime)
+            {
+                ExecuteAttack(attack);
+                break;
+            }
         }
     }
 
-    private void Attack()
+    public void ExecuteAttack(EnemyAttack attack)
     {
         // Check if player is within the enemy's attack range
         Collider2D hitPlayer = Physics2D.OverlapBox(boxCollider.bounds.center, boxCollider.bounds.size, 0f, playerLayer);
 
         if (hitPlayer != null)
         {
+            // Set the attack animation
+            animator.SetTrigger(attack.animationTrigger);
+
             // Get the Health component of the player and deal damage
             Health playerHealth = hitPlayer.GetComponent<Health>();
             if (playerHealth != null)
             {
-                playerHealth.TakeDamage(damage);
-                lastAttackTime = Time.time;  // Update the time of the last attack
+                playerHealth.TakeDamage(attack.attackDamage);
+                attack.nextAttackTime = Time.time + attack.cooldown;
             }
         }
     }

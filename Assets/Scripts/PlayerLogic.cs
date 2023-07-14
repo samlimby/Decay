@@ -20,6 +20,7 @@ public class CharacterController2D : MonoBehaviour
 	private Rigidbody2D m_Rigidbody2D;
 	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 	private Vector3 m_Velocity = Vector3.zero;
+	public Animator animator;
 
 	[Header("Events")]
 	[Space]
@@ -146,4 +147,12 @@ public class CharacterController2D : MonoBehaviour
 		transform.localScale = theScale;
 	}
 
+	 private void HandleDeath()
+   	 {	
+        // Set the Dead animation parameter to true
+        animator.SetBool("Dead", true);
+
+        // You can add more logic that should happen on death here
+        // For example, you could stop all movement and attacking, etc.
+   	 }
 }
