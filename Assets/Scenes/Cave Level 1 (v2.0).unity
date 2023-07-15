@@ -4310,13 +4310,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 226510229}
+  attackPoint: {fileID: 226510226}
   boxCollider: {fileID: 226510223}
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  attackRange: 1.5
   attacks:
-  - animationTrigger: Hit
-    cooldown: 0.5
+  - animationTrigger: SoldierEnemy_Attack_2
+    hitAnimationTrigger: SoldierEnemy_Hit
+    cooldown: 2
     attackDamage: 25
     nextAttackTime: 0
 --- !u!1 &334002236
@@ -5001,6 +5004,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1628729305}
+  isAttacking: 0
   attackPoint: {fileID: 739540163}
   attackRange: 0.32
   enemyLayers:

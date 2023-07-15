@@ -15,12 +15,16 @@ public class Attack
 public class PlayerCombat : MonoBehaviour
 {
     public Animator animator;
+    public bool isAttacking;
 
     public Transform attackPoint;
     public float attackRange = 0.5f;
     public LayerMask enemyLayers; 
 
     public List<Attack> attacks;
+
+    private Attack currentAttack; // keep a reference to the current attack being executed
+    private Collider2D[] currentHitEnemies; // keep a reference to the enemies being hit
 
     void Update()
     {
@@ -39,14 +43,25 @@ public class PlayerCombat : MonoBehaviour
     void ExecuteAttack(Attack attack)
     {
         animator.SetTrigger(attack.animationTrigger);
+        isAttacking = true;
+
         //Detect enemies in range of attack
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
-        //Damage them
-        foreach(Collider2D enemy in hitEnemies)
-        {
-            enemy.GetComponent<Health>().TakeDamage(attack.attackDamage);
-        }
+        currentHitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+
+        // Set the current attack being executed
+        currentAttack = attack;
+
         attack.nextAttackTime = Time.time + attack.cooldown;
+    }
+
+    // Call this function from the animation event
+    public void DealDamage()
+    {
+        //Damage them
+        foreach(Collider2D enemy in currentHitEnemies)
+        {
+            enemy.GetComponent<Health>().TakeDamage(currentAttack.attackDamage);
+        }
     }
 
     void OnDrawGizmosSelected() 
@@ -55,5 +70,10 @@ public class PlayerCombat : MonoBehaviour
             return;
         
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
+
+    public void EndAttack()
+    {
+        isAttacking = false; // Player finishes attacking
     }
 }

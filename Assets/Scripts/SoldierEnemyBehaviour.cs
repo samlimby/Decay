@@ -6,6 +6,7 @@ using UnityEngine;
 public class EnemyAttack
 {
     public string animationTrigger;
+    public string hitAnimationTrigger;
     public float cooldown;
     public int attackDamage;
     [HideInInspector]
@@ -15,53 +16,75 @@ public class EnemyAttack
 public class SoldierEnemyBehaviour : MonoBehaviour
 {
     public Animator animator;
-
+    public Transform attackPoint;
     public BoxCollider2D boxCollider;
     public LayerMask playerLayer;
+    public float attackRange = 0.5f;
 
     private Health health;
-    
     public List<EnemyAttack> attacks;
+
+    private EnemyAttack currentAttack; // keep a reference to the current attack being executed
+    private Collider2D currentPlayer; // keep a reference to the player being hit
+
+    private PlayerCombat player; // Add this line
 
     private void Awake()
     {
-        // Get the Health and Animator components
         health = GetComponent<Health>();
         animator = GetComponent<Animator>();
-
-        // Register to the OnDie event of the Health script
         health.OnDie.AddListener(HandleDeath);
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        if (playerObject != null)
+        {
+            player = playerObject.GetComponent<PlayerCombat>();
+        }
     }
 
     private void Update()
     {
-        foreach (var attack in attacks)
+        Collider2D hitPlayer = Physics2D.OverlapCircle(attackPoint.position, attackRange, playerLayer);
+
+         // If player is in range, find an attack to execute
+        if (hitPlayer != null)
         {
-            if (Time.time >= attack.nextAttackTime)
+            foreach (var attack in attacks)
             {
-                ExecuteAttack(attack);
-                break;
+                if (Time.time >= attack.nextAttackTime)
+                {
+                    ExecuteAttack(attack, hitPlayer);
+                    break;
+                }
+            }
+        }
+
+        // If player is attacking and enemy is in player's attack range, play hit animation
+        if(hitPlayer != null && (player != null && player.isAttacking))
+        {
+            foreach (var attack in attacks)
+            {
+                animator.SetTrigger(attack.hitAnimationTrigger);
             }
         }
     }
 
-    public void ExecuteAttack(EnemyAttack attack)
+    public void ExecuteAttack(EnemyAttack attack, Collider2D hitPlayer)
     {
-        // Check if player is within the enemy's attack range
-        Collider2D hitPlayer = Physics2D.OverlapBox(boxCollider.bounds.center, boxCollider.bounds.size, 0f, playerLayer);
+        animator.SetTrigger(attack.animationTrigger);
+        currentAttack = attack;
+        currentPlayer = hitPlayer;
+        attack.nextAttackTime = Time.time + attack.cooldown;
+    }
 
-        if (hitPlayer != null)
+    public void DealDamage()
+    {
+        Debug.Log("DealDamage is called");
+
+        // Get the Health component of the player and deal damage
+        Health playerHealth = currentPlayer.GetComponent<Health>();
+        if (playerHealth != null)
         {
-            // Set the attack animation
-            animator.SetTrigger(attack.animationTrigger);
-
-            // Get the Health component of the player and deal damage
-            Health playerHealth = hitPlayer.GetComponent<Health>();
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(attack.attackDamage);
-                attack.nextAttackTime = Time.time + attack.cooldown;
-            }
+            playerHealth.TakeDamage(currentAttack.attackDamage);
         }
     }
 
@@ -69,8 +92,13 @@ public class SoldierEnemyBehaviour : MonoBehaviour
     {
         // Set the Dead animation parameter to true
         animator.SetBool("Dead", true);
+    }
 
-        // You can add more logic that should happen on death here
-        // For example, you could stop all movement and attacking, etc.
+    void OnDrawGizmosSelected() 
+    {
+        if (attackPoint == null)
+            return;
+
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 }
