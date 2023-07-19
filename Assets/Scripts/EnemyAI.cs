@@ -27,6 +27,7 @@ public class EnemyAI : MonoBehaviour
     RaycastHit2D isGrounded;
     Seeker seeker;
     Rigidbody2D rb;
+    private bool reachedEndOfPath = false;
 
     public void Start()
     {
@@ -62,12 +63,19 @@ public class EnemyAI : MonoBehaviour
         // Reached end of path
         if (currentWaypoint >= path.vectorPath.Count)
         {
+            reachedEndOfPath = true;
             return;
+        }else
+        {
+            reachedEndOfPath = false;
         }
 
         // See if colliding with anything
         Vector3 startOffset = transform.position - new Vector3(0f, GetComponent<Collider2D>().bounds.extents.y + jumpCheckOffset);
         isGrounded = Physics2D.Raycast(startOffset, -Vector3.up, 0.05f);
+
+        // Debug draw the ground check raycast
+        Debug.DrawLine(startOffset, startOffset - Vector3.up * 0.05f, Color.red);
         
         // Direction Calculation
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
@@ -82,8 +90,10 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
-        // Movement
-        rb.AddForce(force);
+        // Apply constant force for smooth movement
+        float forceMagnitude = force.magnitude;
+        Vector2 normalizedForce = force.normalized;
+        rb.velocity = normalizedForce * speed;
 
         // Next Waypoint
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
@@ -104,6 +114,9 @@ public class EnemyAI : MonoBehaviour
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
             }
         }
+
+         // Debug message
+         Debug.Log("Enemy is moving!");
     }
 
     private bool TargetInDistance()
