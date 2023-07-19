@@ -4276,6 +4276,7 @@ GameObject:
   - component: {fileID: 1369297918}
   - component: {fileID: 1369297915}
   - component: {fileID: 1369297919}
+  - component: {fileID: 1369297921}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
@@ -4503,6 +4504,27 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
+--- !u!114 &1369297921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369297907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16d114b3a5a884d3c8f804dc1a1d0e00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 5
+  angle: 184
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  obstructionLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  playerRef: {fileID: 1628729298}
 --- !u!1 &1628729298
 GameObject:
   m_ObjectHideFlags: 0
