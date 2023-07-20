@@ -8,10 +8,6 @@ public class Health : MonoBehaviour
 
     public Animator animator;
 
-    // Define the events
-    public UnityEvent OnHit;
-    public UnityEvent OnDie;
-
     void Start()
     {
         currentHealth = maxHealth;

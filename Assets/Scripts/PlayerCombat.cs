@@ -72,6 +72,11 @@ public class PlayerCombat : MonoBehaviour
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
+    public void StartAttack()
+    {
+        isAttacking = true;
+    }
+
     public void EndAttack()
     {
         isAttacking = false; // Player finishes attacking
