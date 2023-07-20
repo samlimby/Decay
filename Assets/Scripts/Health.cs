@@ -19,9 +19,6 @@ public class Health : MonoBehaviour
 
         animator.SetTrigger("Hit");
 
-        // Invoke the OnHit event
-        OnHit?.Invoke();
-
         if(currentHealth <= 0)
         {
             Die();
@@ -32,10 +29,6 @@ public class Health : MonoBehaviour
     void Die()
     {
         Debug.Log("Enemy Died!");
-
-        // Invoke the OnDie event
-        OnDie?.Invoke();
-
         animator.SetBool("Dead", true);
     }
 }

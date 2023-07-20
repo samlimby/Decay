@@ -41,6 +41,8 @@ public class EnemyAI : MonoBehaviour
     private EnemyAttack currentAttack;
     private Collider2D currentPlayer;
     private PlayerCombat player;
+    public bool isAttacking;
+    public List<EnemyAttack> attacks;
 
     private Path path;
     private int currentWaypoint = 0;
@@ -50,15 +52,18 @@ public class EnemyAI : MonoBehaviour
     Health health;
     private bool reachedEndOfPath = false;
     private Collider2D[] currentHitPlayer;
+    public LayerMask playerLayer;
+    public Animator animator;
+    public Transform attackPoint;
+    private Health enemyHealth;
 
     public void Awake()
     {
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
         health = GetComponent<Health>();
-        animator - GetComponent<Animator>();
-
-        health.OnDie.AddListener(HandleDeath);
+        animator = GetComponent<Animator>();
+        enemyHealth = GetComponent<Health>();
 
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         if (playerObject != null)
@@ -228,7 +233,7 @@ public class EnemyAI : MonoBehaviour
 
     public void ExecuteAttack(EnemyAttack attack, Collider2D hitPlayer)
     {
-        animatior.SetTrigger(attack.animationTrigger);
+        animator.SetTrigger(attack.animationTrigger);
         currentAttack = attack;
         currentPlayer = hitPlayer;
         attack.nextAttackTime = Time.time + attack.cooldown;
@@ -239,7 +244,7 @@ public class EnemyAI : MonoBehaviour
 
         foreach(Collider2D player in currentHitPlayer)
         {
-            enemy.GetComponent<Health>().TakeDamage(currentAttack.attackDamage);
+            currentPlayer.GetComponent<Health>().TakeDamage(currentAttack.attackDamage);
         }
     }
 
